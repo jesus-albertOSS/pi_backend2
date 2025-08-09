@@ -5,7 +5,6 @@ import com.example.myapi.model.dto.UserDTO;
 import com.example.myapi.model.entity.User;
 import com.example.myapi.repository.UserRepository;
 import com.example.myapi.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
