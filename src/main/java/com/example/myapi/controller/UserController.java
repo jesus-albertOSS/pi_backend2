@@ -1,27 +1,44 @@
 package com.example.myapi.controller;
 
-import com.example.myapi.model.dto.UserDTO;
-import com.example.myapi.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import com.example.myapi.model.entity.User;
+import com.example.myapi.repository.UserRepository;
 import org.springframework.web.bind.annotation.*;
-
+import java.util.List;
+import java.util.UUID;
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
 
-    @Autowired
-    private UserService userService;
+    private final UserRepository repo;
 
-    @PostMapping
-    public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO) {
-        UserDTO createdUser = userService.createUser(userDTO);
-        return ResponseEntity.status(201).body(createdUser);
+    public UserController(UserRepository repo) {
+        this.repo = repo;
+    }
+
+    @GetMapping
+    public List<User> getAll() {
+        return repo.findAll();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserDTO> getUserById(@PathVariable Long id) {
-        UserDTO user = userService.getUserById(id);
-        return ResponseEntity.ok(user);
+    public User getById(@PathVariable UUID id) {
+        return repo.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+    }
+
+    @PostMapping
+    public User create(@RequestBody User user) {
+        return repo.save(user);
+    }
+
+    @PutMapping("/{id}")
+    public User update(@PathVariable UUID id, @RequestBody User user) {
+        User existing = repo.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+        user.setId(existing.getId());
+        return repo.save(user);
+    }
+
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable UUID id) {
+        repo.deleteById(id);
     }
 }
