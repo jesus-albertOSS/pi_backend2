@@ -26,12 +26,8 @@ public class Product {
     @Column(columnDefinition = "jsonb")
     private String description;
 
-    @ElementCollection
-    private List<String> features;
+   private String feature;
 
-    @ElementCollection
-    private List<String> images;
-    
     private BigDecimal price;
 
     private LocalDateTime createdAt = LocalDateTime.now();
