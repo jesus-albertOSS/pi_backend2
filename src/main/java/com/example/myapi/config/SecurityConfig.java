@@ -19,9 +19,11 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .csrf(csrf -> csrf.disable())
+            .cors(cors -> {}) // 👈 activa CORS (necesita tu CorsConfig.java)
             .authorizeHttpRequests(auth -> auth
-                // Rutas relacionadas con Swagger/OpenAPI que conviene permitir
+                // Rutas públicas
                 .requestMatchers(
+                    "/api/products/**",     // 👈 tu frontend necesita esto público
                     "/swagger-ui/**",
                     "/swagger-ui.html",
                     "/v3/api-docs/**",
@@ -32,7 +34,7 @@ public class SecurityConfig {
                 ).permitAll()
                 .anyRequest().authenticated()
             )
-            .httpBasic(); // usa Basic Auth
+            .httpBasic(); // Usa Basic Auth solo para las rutas protegidas
         return http.build();
     }
 
@@ -40,7 +42,7 @@ public class SecurityConfig {
     public UserDetailsService userDetailsService(PasswordEncoder passwordEncoder) {
         UserDetails user = User.builder()
                 .username("admin")
-                .password(passwordEncoder.encode("admin123")) // codifica la pass
+                .password(passwordEncoder.encode("admin123"))
                 .roles("ADMIN")
                 .build();
         return new InMemoryUserDetailsManager(user);
