@@ -7,16 +7,17 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class CorsConfig {
-//1
+
     @Bean
     public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**")
-                        .allowedOrigins("http://localhost:3000", "https://pi-backend2-go2o.onrender.com")
+                registry.addMapping("/**") // aplica a todas las rutas
+                        .allowedOrigins("http://localhost:3000") // origen de tu frontend en desarrollo
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-                        .allowCredentials(true);
+                        .allowedHeaders("*")
+                        .allowCredentials(true); // permite cookies/autenticación si algún endpoint la requiere
             }
         };
     }
