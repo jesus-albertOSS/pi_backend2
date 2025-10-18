@@ -1,14 +1,14 @@
 package com.example.myapi.service;
 
-import com.example.myapi.model.entity.Product;
+import com.example.myapi.model.dto.CreateProductDTO;
+import com.example.myapi.model.dto.ProductResponseDTO;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 public interface ProductService {
-    List<Product> findAll();
-    Optional<Product> findById(UUID id);
-    Product save(Product product);
-    void deleteById(UUID id);
+    List<ProductResponseDTO> findAll();
+    ProductResponseDTO findById(UUID id);
+    ProductResponseDTO create(CreateProductDTO dto);
+    void delete(UUID id);
 }

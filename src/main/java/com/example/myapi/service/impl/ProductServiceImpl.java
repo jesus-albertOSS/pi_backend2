@@ -1,40 +1,69 @@
 package com.example.myapi.service.impl;
 
+import com.example.myapi.model.dto.CreateProductDTO;
+import com.example.myapi.model.dto.ProductResponseDTO;
 import com.example.myapi.model.entity.Product;
 import com.example.myapi.repository.ProductRepository;
 import com.example.myapi.service.ProductService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
 public class ProductServiceImpl implements ProductService {
 
-    private final ProductRepository productRepository;
+    private final ProductRepository repository;
 
-    public ProductServiceImpl(ProductRepository productRepository) {
-        this.productRepository = productRepository;
+    public ProductServiceImpl(ProductRepository repository) {
+        this.repository = repository;
     }
 
     @Override
-    public List<Product> findAll() {
-        return productRepository.findAll();
+    public List<ProductResponseDTO> findAll() {
+        return repository.findAll()
+                .stream()
+                .map(this::mapToDTO)
+                .toList();
     }
 
     @Override
-    public Optional<Product> findById(UUID id) {
-        return productRepository.findById(id);
+    public ProductResponseDTO findById(UUID id) {
+        return repository.findById(id)
+                .map(this::mapToDTO)
+                .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
     }
 
     @Override
-    public Product save(Product product) {
-        return productRepository.save(product);
+    public ProductResponseDTO create(CreateProductDTO dto) {
+        Product product = Product.builder()
+                .name(dto.getName())
+                .description(dto.getDescription())
+                .feature(dto.getFeature())
+                .price(dto.getPrice())
+                .stock(dto.getStock())
+                .imageUrl(dto.getImageUrl())
+                .build();
+
+        repository.save(product);
+        return mapToDTO(product);
     }
 
     @Override
-    public void deleteById(UUID id) {
-        productRepository.deleteById(id);
+    public void delete(UUID id) {
+        repository.deleteById(id);
+    }
+
+    private ProductResponseDTO mapToDTO(Product product) {
+        return ProductResponseDTO.builder()
+                .id(product.getId())
+                .name(product.getName())
+                .description(product.getDescription())
+                .feature(product.getFeature())
+                .price(product.getPrice())
+                .stock(product.getStock())
+                .imageUrl(product.getImageUrl())
+                .createdAt(product.getCreatedAt())
+                .build();
     }
 }

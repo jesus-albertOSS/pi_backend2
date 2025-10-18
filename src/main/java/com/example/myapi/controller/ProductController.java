@@ -1,44 +1,47 @@
 package com.example.myapi.controller;
 
-import com.example.myapi.model.entity.Product;
-import com.example.myapi.repository.ProductRepository;
+import com.example.myapi.model.dto.CreateProductDTO;
+import com.example.myapi.model.dto.ProductResponseDTO;
+import com.example.myapi.service.ProductService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 import java.util.UUID;
+
 @RestController
 @RequestMapping("/api/products")
+@CrossOrigin(origins = "*")
 public class ProductController {
 
-    private final ProductRepository repo;
+    private final ProductService productService;
 
-    public ProductController(ProductRepository repo) {
-        this.repo = repo;
+    public ProductController(ProductService productService) {
+        this.productService = productService;
     }
 
+    // Obtener todos los productos
     @GetMapping
-    public List<Product> getAll() {
-        return repo.findAll();
+    public ResponseEntity<List<ProductResponseDTO>> getAllProducts() {
+        return ResponseEntity.ok(productService.findAll());
     }
 
+    // Obtener producto por ID
     @GetMapping("/{id}")
-    public Product getById(@PathVariable UUID id) {
-        return repo.findById(id).orElseThrow(() -> new RuntimeException("Product not found"));
+    public ResponseEntity<ProductResponseDTO> getProductById(@PathVariable UUID id) {
+        return ResponseEntity.ok(productService.findById(id));
     }
 
+    // Crear producto
     @PostMapping
-    public Product create(@RequestBody Product product) {
-        return repo.save(product);
+    public ResponseEntity<ProductResponseDTO> createProduct(@RequestBody CreateProductDTO dto) {
+        return ResponseEntity.ok(productService.create(dto));
     }
 
-    @PutMapping("/{id}")
-    public Product update(@PathVariable UUID id, @RequestBody Product product) {
-        Product existing = repo.findById(id).orElseThrow(() -> new RuntimeException("Product not found"));
-        product.setId(existing.getId());
-        return repo.save(product);
-    }
-
+    // Eliminar producto
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable UUID id) {
-        repo.deleteById(id);
+    public ResponseEntity<Void> deleteProduct(@PathVariable UUID id) {
+        productService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }

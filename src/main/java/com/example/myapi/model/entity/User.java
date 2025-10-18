@@ -12,9 +12,20 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 public class User {
+
     @Id
     @GeneratedValue
     private UUID id;
 
+    @Column(nullable = false)
+    private String name;
+
+    @Column(nullable = false, unique = true)
+    private String email;
+
+    @Column(nullable = false)
+    private String password;
+
+    @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 }

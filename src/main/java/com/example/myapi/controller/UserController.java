@@ -1,44 +1,40 @@
 package com.example.myapi.controller;
 
-import com.example.myapi.model.entity.User;
-import com.example.myapi.repository.UserRepository;
+import com.example.myapi.model.dto.UserRequestDTO;
+import com.example.myapi.model.dto.UserResponseDTO;
+import com.example.myapi.service.UserService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 import java.util.UUID;
+
 @RestController
 @RequestMapping("/api/users")
+@RequiredArgsConstructor
 public class UserController {
 
-    private final UserRepository repo;
+    private final UserService userService;
 
-    public UserController(UserRepository repo) {
-        this.repo = repo;
+    @PostMapping
+    public ResponseEntity<UserResponseDTO> createUser(@RequestBody UserRequestDTO request) {
+        return ResponseEntity.ok(userService.createUser(request));
     }
 
     @GetMapping
-    public List<User> getAll() {
-        return repo.findAll();
+    public ResponseEntity<List<UserResponseDTO>> getAllUsers() {
+        return ResponseEntity.ok(userService.getAllUsers());
     }
 
     @GetMapping("/{id}")
-    public User getById(@PathVariable UUID id) {
-        return repo.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
-    }
-
-    @PostMapping
-    public User create(@RequestBody User user) {
-        return repo.save(user);
-    }
-
-    @PutMapping("/{id}")
-    public User update(@PathVariable UUID id, @RequestBody User user) {
-        User existing = repo.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
-        user.setId(existing.getId());
-        return repo.save(user);
+    public ResponseEntity<UserResponseDTO> getUserById(@PathVariable UUID id) {
+        return ResponseEntity.ok(userService.getUserById(id));
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable UUID id) {
-        repo.deleteById(id);
+    public ResponseEntity<Void> deleteUser(@PathVariable UUID id) {
+        userService.deleteUser(id);
+        return ResponseEntity.noContent().build();
     }
 }
