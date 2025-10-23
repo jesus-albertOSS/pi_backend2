@@ -14,38 +14,37 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 @Configuration
 public class SecurityConfig {
 
-    @SuppressWarnings("removal")
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .csrf(csrf -> csrf.disable())
-            .cors(cors -> {}) // 👈 activa CORS (necesita tu CorsConfig.java)
+            .cors(cors -> {}) // habilita el CORS de CorsConfig
             .authorizeHttpRequests(auth -> auth
-                // Rutas públicas
+                // Rutas públicas (Swagger y API pública)
                 .requestMatchers(
-                    "/api/products/**",     // 👈 tu frontend necesita esto público
+                    "/api/products/**",
                     "/swagger-ui/**",
                     "/swagger-ui.html",
                     "/v3/api-docs/**",
-                    "/v3/api-docs.yaml",
                     "/swagger-resources/**",
-                    "/webjars/**",
-                    "/swagger-ui/index.html"
+                    "/webjars/**"
                 ).permitAll()
                 .anyRequest().authenticated()
             )
-            .httpBasic(); // Usa Basic Auth solo para las rutas protegidas
+            .httpBasic(); // autenticación básica por ahora
+
         return http.build();
     }
 
     @Bean
     public UserDetailsService userDetailsService(PasswordEncoder passwordEncoder) {
-        UserDetails user = User.builder()
+        UserDetails admin = User.builder()
                 .username("admin")
                 .password(passwordEncoder.encode("admin123"))
                 .roles("ADMIN")
                 .build();
-        return new InMemoryUserDetailsManager(user);
+
+        return new InMemoryUserDetailsManager(admin);
     }
 
     @Bean
