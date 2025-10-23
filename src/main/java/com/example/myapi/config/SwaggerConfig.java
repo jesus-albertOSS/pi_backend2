@@ -20,7 +20,7 @@ public class SwaggerConfig {
     @Bean
     public OpenAPI customOpenAPI() {
 
-        // 🔐 Autenticación actual: Basic Auth (coincide con tu SecurityConfig)
+        // 🔐 Esquema de seguridad (Basic Auth)
         SecurityScheme basicAuthScheme = new SecurityScheme()
                 .type(SecurityScheme.Type.HTTP)
                 .scheme("basic")
@@ -28,37 +28,40 @@ public class SwaggerConfig {
 
         SecurityRequirement basicAuthRequirement = new SecurityRequirement().addList("basicAuth");
 
-        // 🌍 Servidores (local y producción)
+        // 🌍 Servidores
         Server localServer = new Server()
                 .url("http://localhost:8080")
-                .description("Servidor local");
+                .description("Servidor local - desarrollo");
 
-        Server prodServer = new Server()
-                .url("https://api.myapi.com")
-                .description("Servidor de producción");
+        Server renderServer = new Server()
+                .url("https://pi-backend2-ru4x.onrender.com")
+                .description("Servidor Render - producción");
 
-        // 📘 Configuración principal
+        // ⚙️ Swagger Info
+        Info apiInfo = new Info()
+                .title("MyAPI - Documentación REST")
+                .version("1.0.0")
+                .description("""
+                        API profesional para la gestión de usuarios, productos y operaciones internas.
+                        
+                        Incluye endpoints CRUD, seguridad básica y base lista para JWT futuro.
+                        """)
+                .contact(new Contact()
+                        .name("Equipo de Desarrollo")
+                        .email("soporte@myapi.com")
+                        .url("https://myapi.com"))
+                .license(new License()
+                        .name("Licencia MIT")
+                        .url("https://opensource.org/licenses/MIT"));
+
         return new OpenAPI()
-                .info(new Info()
-                        .title("MyAPI - Documentación REST")
-                        .version("1.0.0")
-                        .description("""
-                            API profesional para la gestión de usuarios, productos y operaciones internas.
-
-                            Incluye endpoints CRUD, seguridad básica y base lista para JWT futuro.
-                            """)
-                        .contact(new Contact()
-                                .name("Equipo de Desarrollo")
-                                .email("soporte@myapi.com")
-                                .url("https://myapi.com"))
-                        .license(new License()
-                                .name("Licencia MIT")
-                                .url("https://opensource.org/licenses/MIT")))
+                .info(apiInfo)
                 .externalDocs(new ExternalDocumentation()
                         .description("Documentación técnica completa")
                         .url("https://docs.myapi.com"))
-                .servers(List.of(localServer, prodServer))
-                .components(new Components().addSecuritySchemes("basicAuth", basicAuthScheme))
+                .servers(List.of(localServer, renderServer))
+                .components(new Components()
+                        .addSecuritySchemes("basicAuth", basicAuthScheme))
                 .addSecurityItem(basicAuthRequirement);
     }
 }
