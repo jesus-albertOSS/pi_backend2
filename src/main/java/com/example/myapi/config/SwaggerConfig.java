@@ -3,9 +3,7 @@ package com.example.myapi.config;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.ExternalDocumentation;
 import io.swagger.v3.oas.models.OpenAPI;
-import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
-import io.swagger.v3.oas.models.info.License;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 import io.swagger.v3.oas.models.servers.Server;
@@ -20,45 +18,51 @@ public class SwaggerConfig {
     @Bean
     public OpenAPI customOpenAPI() {
 
-        // 🔐 Esquema de seguridad (Basic Auth)
+        // 🔐 Esquema de seguridad (Autenticación básica)
         SecurityScheme basicAuthScheme = new SecurityScheme()
                 .type(SecurityScheme.Type.HTTP)
                 .scheme("basic")
-                .description("Autenticación básica con usuario y contraseña");
+                .description("""
+                        Este proyecto utiliza un sistema de autenticación básica
+                        para proteger los endpoints de la API.
+                        """);
 
         SecurityRequirement basicAuthRequirement = new SecurityRequirement().addList("basicAuth");
 
-        // 🌍 Servidores
+        // 🌍 Servidores disponibles
         Server localServer = new Server()
                 .url("http://localhost:8080")
-                .description("Servidor local - desarrollo");
+                .description("Servidor local para desarrollo y pruebas");
 
         Server renderServer = new Server()
                 .url("https://pi-backend2-ru4x.onrender.com")
-                .description("Servidor Render - producción");
+                .description("Servidor en producción - Render");
 
-        // ⚙️ Swagger Info
+        // 🧾 Información general del proyecto
         Info apiInfo = new Info()
-                .title("MyAPI - Documentación REST")
+                .title("🎮 Game Connect - Documentación REST")
                 .version("1.0.0")
                 .description("""
-                        API profesional para la gestión de usuarios, productos y operaciones internas.
-                        
-                        Incluye endpoints CRUD, seguridad básica y base lista para JWT futuro.
-                        """)
-                .contact(new Contact()
-                        .name("Equipo de Desarrollo")
-                        .email("soporte@myapi.com")
-                        .url("https://myapi.com"))
-                .license(new License()
-                        .name("Licencia MIT")
-                        .url("https://opensource.org/licenses/MIT"));
+                        Bienvenido a la **API REST de Game Connect**, un backend diseñado para 
+                        la gestión de usuarios y productos de una plataforma de videojuegos.
+
+                        ---
+                        🔹 **Usuarios (`/users`)**
+                        Permite registrar, autenticar y administrar usuarios dentro del sistema.
+
+                        🔹 **Productos (`/products`)**
+                        Gestiona los videojuegos disponibles, incluyendo su **nombre**, **descripción**, 
+                        **disponibilidad**, **precio** e **imagen**.
+
+                        ---
+                        Esta documentación describe los endpoints disponibles, el modelo de seguridad 
+                        y la estructura general del backend de Game Connect.
+                        """);
 
         return new OpenAPI()
                 .info(apiInfo)
                 .externalDocs(new ExternalDocumentation()
-                        .description("Documentación técnica completa")
-                        .url("https://docs.myapi.com"))
+                        .description("Guía técnica local para desarrolladores"))
                 .servers(List.of(localServer, renderServer))
                 .components(new Components()
                         .addSecuritySchemes("basicAuth", basicAuthScheme))
