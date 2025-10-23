@@ -9,6 +9,5 @@ public class ProductRequestDTO {
     private String description;
     private String feature;
     private BigDecimal price;
-    private int stock;
     private String imageUrl;
 }

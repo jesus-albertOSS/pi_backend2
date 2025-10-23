@@ -41,7 +41,6 @@ public class ProductServiceImpl implements ProductService {
                 .description(dto.getDescription())
                 .feature(dto.getFeature())
                 .price(dto.getPrice())
-                .stock(dto.getStock())
                 .imageUrl(dto.getImageUrl())
                 .build();
 
@@ -61,7 +60,6 @@ public class ProductServiceImpl implements ProductService {
                 .description(product.getDescription())
                 .feature(product.getFeature())
                 .price(product.getPrice())
-                .stock(product.getStock())
                 .imageUrl(product.getImageUrl())
                 .createdAt(product.getCreatedAt())
                 .build();

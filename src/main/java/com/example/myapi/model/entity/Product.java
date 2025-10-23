@@ -33,11 +33,6 @@ public class Product {
    
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal price;
-
- 
-    @Column(nullable = false)
-    private Integer stock = 0;
-
   
     @Column(name = "image_url", length = 255)
     private String imageUrl;
