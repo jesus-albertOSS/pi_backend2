@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
 import java.util.UUID;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -26,6 +27,14 @@ public class User {
     @Column(nullable = false)
     private String password;
 
+    // Nuevo campo
+    @Column(nullable = false)
+    private Integer puntos = 0;
+
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
+
+    // Relación con factura
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Factura> facturas;
 }
