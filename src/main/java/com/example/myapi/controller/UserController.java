@@ -27,7 +27,7 @@ public class UserController {
     public ResponseEntity<UserResponseDTO> getUserById(@PathVariable UUID id) {
         return ResponseEntity.ok(userService.getUserById(id));
     }
-
+//
     @PostMapping
     public ResponseEntity<UserResponseDTO> createUser(@RequestBody UserRequestDTO dto) {
         return ResponseEntity.ok(userService.createUser(dto));
