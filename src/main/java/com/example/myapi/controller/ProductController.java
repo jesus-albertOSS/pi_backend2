@@ -17,7 +17,6 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/products")
-@CrossOrigin(origins = "*")
 @Tag(
     name = "🎮 Productos",
     description = """
