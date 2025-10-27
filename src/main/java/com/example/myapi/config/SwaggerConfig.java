@@ -18,45 +18,44 @@ public class SwaggerConfig {
     @Bean
     public OpenAPI customOpenAPI() {
 
-        // 🔐 Esquema de seguridad (Autenticación básica)
+        // 🔐 Autenticación básica
         SecurityScheme basicAuthScheme = new SecurityScheme()
                 .type(SecurityScheme.Type.HTTP)
                 .scheme("basic")
+                .name("basicAuth") // 👈 nombre explícito (buena práctica)
                 .description("""
-                        Este proyecto utiliza un sistema de autenticación básica
+                        Este proyecto utiliza un sistema de autenticación básica (HTTP Basic Auth)
                         para proteger los endpoints de la API.
+                        Incluye las credenciales en el encabezado Authorization.
                         """);
 
         SecurityRequirement basicAuthRequirement = new SecurityRequirement().addList("basicAuth");
 
-        // 🌍 Servidores disponibles
+        // 🌍 Servidores disponibles (puedes agregar más si usas otros entornos)
         Server localServer = new Server()
                 .url("http://localhost:8080")
-                .description("Servidor local para desarrollo y pruebas");
+                .description("Servidor local (desarrollo)");
 
         Server renderServer = new Server()
                 .url("https://pi-backend2-ru4x.onrender.com")
                 .description("Servidor en producción - Render");
 
-        // 🧾 Información general del proyecto
+        // 🧾 Información general de la API
         Info apiInfo = new Info()
                 .title("🎮 Game Connect - Documentación REST")
                 .version("1.0.0")
                 .description("""
-                        Bienvenido a la **API REST de Game Connect**, un backend diseñado para 
-                        la gestión de usuarios y productos de una plataforma de videojuegos.
+                        Bienvenido a la **API REST de Game Connect** 🎮  
+                        Esta API permite la gestión de usuarios y productos de una plataforma de videojuegos.
 
                         ---
-                        🔹 **Usuarios (`/users`)**
-                        Permite registrar, autenticar y administrar usuarios dentro del sistema.
-
-                        🔹 **Productos (`/products`)**
-                        Gestiona los videojuegos disponibles, incluyendo su **nombre**, **descripción**, 
-                        **disponibilidad**, **precio** e **imagen**.
-
+                        **Endpoints principales:**
+                        - `/api/users` → Registro, autenticación y administración de usuarios.  
+                        - `/api/products` → Gestión de videojuegos: nombre, descripción, disponibilidad, precio e imagen.  
+                        
                         ---
-                        Esta documentación describe los endpoints disponibles, el modelo de seguridad 
-                        y la estructura general del backend de Game Connect.
+                        ⚙️ Autenticación:
+                        Usa el esquema **Basic Auth** para acceder a los endpoints protegidos.
                         """);
 
         return new OpenAPI()

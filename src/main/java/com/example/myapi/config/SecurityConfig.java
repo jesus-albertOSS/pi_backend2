@@ -17,25 +17,32 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+            // ✅ 1. Habilita CORS usando tu CorsConfig
+            .cors(cors -> cors.configure(http))
+            
+            // ✅ 2. Desactiva CSRF (innecesario para APIs REST)
             .csrf(csrf -> csrf.disable())
-            .cors(cors -> {}) // habilita el CORS de CorsConfig
+            
+            // ✅ 3. Define rutas públicas
             .authorizeHttpRequests(auth -> auth
-                // Rutas públicas (Swagger y API pública)
                 .requestMatchers(
-                    "/api/products/**",
-                    "/swagger-ui/**",
-                    "/swagger-ui.html",
-                    "/v3/api-docs/**",
-                    "/swagger-resources/**",
+                    "/api/products/**",      // tu API pública
+                    "/swagger-ui/**",        // interfaz Swagger
+                    "/swagger-ui.html", 
+                    "/v3/api-docs/**", 
+                    "/swagger-resources/**", 
                     "/webjars/**"
                 ).permitAll()
-                .anyRequest().authenticated()
+                .anyRequest().authenticated() // el resto requiere login
             )
-            .httpBasic(); // autenticación básica por ahora
+            
+            // ✅ 4. Usa autenticación básica (solo si es necesaria)
+            .httpBasic();
 
         return http.build();
     }
 
+    // ✅ Servicio de usuarios en memoria (solo para pruebas locales o Swagger)
     @Bean
     public UserDetailsService userDetailsService(PasswordEncoder passwordEncoder) {
         UserDetails admin = User.builder()
@@ -47,6 +54,7 @@ public class SecurityConfig {
         return new InMemoryUserDetailsManager(admin);
     }
 
+    // ✅ Encriptador de contraseñas
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
