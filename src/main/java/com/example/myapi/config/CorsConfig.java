@@ -14,9 +14,11 @@ public class CorsConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins(
+                        // Usa allowedOriginPatterns en lugar de allowedOrigins
+                        .allowedOriginPatterns(
                             "http://localhost:3000",
-                            "https://pi-backend2-ru4x.onrender.com"
+                            "https://pi-backend2-ru4x.onrender.com",
+                            "https://*.onrender.com"
                         )
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
