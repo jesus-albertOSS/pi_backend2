@@ -27,6 +27,7 @@ import java.util.UUID;
         - Obtener detalles de un juego específico.
         - Crear nuevos productos (solo administradores).
         - Eliminar productos del catálogo.
+        - Buscar productos por temática.
         """
 )
 public class ProductController {
@@ -107,5 +108,26 @@ public class ProductController {
     public ResponseEntity<Void> deleteProduct(@PathVariable UUID id) {
         productService.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    // 🎯 Buscar productos por temática
+    @Operation(
+        summary = "Buscar productos por temática",
+        description = "Devuelve todos los videojuegos que pertenecen a una temática específica.",
+        parameters = {
+            @Parameter(name = "tematica", description = "Temática del videojuego", required = true)
+        },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "Lista obtenida correctamente"),
+            @ApiResponse(responseCode = "404", description = "No se encontraron productos con esa temática")
+        }
+    )
+    @GetMapping("/tematica/{tematica}")
+    public ResponseEntity<List<ProductResponseDTO>> getByTematica(@PathVariable String tematica) {
+        List<ProductResponseDTO> productos = productService.findByTematica(tematica);
+        if (productos.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(productos);
     }
 }

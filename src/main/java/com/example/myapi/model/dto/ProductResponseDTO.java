@@ -17,4 +17,5 @@ public class ProductResponseDTO {
     private BigDecimal price;
     private String imageUrl;
     private LocalDateTime createdAt;
+    private String tematica;
 }

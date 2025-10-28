@@ -42,6 +42,7 @@ public class ProductServiceImpl implements ProductService {
                 .feature(dto.getFeature())
                 .price(dto.getPrice())
                 .imageUrl(dto.getImageUrl())
+                .tematica(dto.getTematica()) // ✅ Agregado campo tematica
                 .build();
 
         repository.save(product);
@@ -53,6 +54,15 @@ public class ProductServiceImpl implements ProductService {
         repository.deleteById(id);
     }
 
+    // 🎮 Nuevo método para buscar productos por temática
+    @Override
+    public List<ProductResponseDTO> findByTematica(String tematica) {
+        return repository.findByTematicaIgnoreCase(tematica)
+                .stream()
+                .map(this::mapToDTO)
+                .toList();
+    }
+
     private ProductResponseDTO mapToDTO(Product product) {
         return ProductResponseDTO.builder()
                 .id(product.getId())
@@ -61,6 +71,7 @@ public class ProductServiceImpl implements ProductService {
                 .feature(product.getFeature())
                 .price(product.getPrice())
                 .imageUrl(product.getImageUrl())
+                .tematica(product.getTematica()) // ✅ Campo tematica
                 .createdAt(product.getCreatedAt())
                 .build();
     }

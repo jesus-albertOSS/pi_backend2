@@ -10,4 +10,5 @@ public class ProductRequestDTO {
     private String feature;
     private BigDecimal price;
     private String imageUrl;
+    private String tematica;
 }
